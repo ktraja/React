@@ -1,7 +1,8 @@
 import "./App.css";
-import CatFilter from "./components/CatFilter";
-import ProdList from "./components/ProdList";
-import { TEMP_CATEGORY, TEMP_PROD } from "./prodData";
+import Shop from "./pages/Shop";
+import { Redirect, Route, Switch } from "react-router-dom";
+import Home from "./pages/Home";
+import Auth from "./pages/Auth";
 
 function App() {
   return (
@@ -10,17 +11,22 @@ function App() {
         <span>Welcome to React eCommmerce Shopping Mart</span>
         <span type="button" className="fas fa-shopping-cart cart"></span>
       </div>
+
       <div className="App-body">
-        <div className="catBox">
-          {TEMP_CATEGORY.map((cat) => (
-            <CatFilter key={Math.random().toFixed(2)} cat={cat} />
-          ))}
-        </div>
-        <div className="prodBox">
-          {TEMP_PROD.map((prod) => (
-            <ProdList key={prod.id} prod={prod} />
-          ))}
-        </div>
+        <Switch>
+          <Route path="/" exact>
+            <Redirect to="/home" />
+          </Route>
+          <Route path="/home">
+            <Home />
+          </Route>
+          <Route path="/login">
+            <Auth />
+          </Route>
+          <Route path="/shop">
+            <Shop />
+          </Route>
+        </Switch>
       </div>
     </div>
   );

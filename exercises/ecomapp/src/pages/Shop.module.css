@@ -1,0 +1,20 @@
+.prodBox {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.catBox {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  background-color: lightgray;
+  color: black;
+}
+.App-body {
+  display: flex;
+  flex-direction: row;
+  background-color: gray;
+  height: 85vh;
+  color: white;
+}
