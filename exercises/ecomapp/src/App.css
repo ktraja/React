@@ -1,0 +1,87 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.App-header {
+  background-color: black;
+  height: 15vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding-left: 50px;
+  padding-right: 100px;
+}
+
+.App-body {
+  display: flex;
+  flex-direction: row;
+  background-color: gray;
+  height: 85vh;
+  color: white;
+}
+
+.cart {
+  font-size: 50px;
+}
+
+.catBox {
+  display: flex;
+  flex-direction: column;
+  width: 15%;
+  background-color: lightgray;
+  color: black;
+}
+.cat {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.pic {
+  width: 100px;
+  height: 100px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.prodBox {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.prod {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+  border-style: outset;
+}
+.brPr {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  width: 100%;
+}
+
+.btn {
+  width: 50px;
+  height: 25px;
+  border-radius: 1px;
+  border-style: outset;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.btnBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

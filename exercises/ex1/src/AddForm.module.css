@@ -1,0 +1,23 @@
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 40%;
+  font-size: large;
+}
+form p {
+  align-items: left;
+  font-size: small;
+}
+.input {
+  height: 30px;
+  width: 100;
+  margin-bottom: 10px;
+}
+
+.btn {
+  background-color: lightgreen;
+  height: 30px;
+  font-size: large;
+  font-weight: bold;
+}

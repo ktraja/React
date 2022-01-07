@@ -1,0 +1,46 @@
+.frmBox{
+    width: 45%;
+    box-shadow: 0px 0px 10px 0px grey;
+    padding : 40px 40px;
+    border-radius: 10px;
+}
+
+.lbl{
+    font-weight:bolder;
+}
+.inp{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 75%;
+    height: 25px;
+}
+
+.inpButton {
+    width:25%;
+    height: 40px;
+    background-color: rgb(161, 78, 123);
+    box-shadow: 0 0 4px rgba(0,0,0.26);
+    color: white;
+    font-size: medium;
+    cursor:pointer;
+}
+
+.inpButton:focus{
+    outline: none;
+}
+
+.inpButton:hover,
+.inpButton:active{
+    background-color:orchid;
+    background:orchid;
+    box-shadow: 0 0 8px rgba(0,0,0.26);
+}
+
+.inp.invalid {
+    border-color: red;
+    background-color:rgb(226, 140, 106);
+}
+
+.lbl.invalid {
+    color: red;
+}
