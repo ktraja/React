@@ -21,7 +21,7 @@
   display: flex;
   flex-direction: row;
   background-color: gray;
-  height: 85vh;
+  height: auto;
   color: white;
 }
 
@@ -71,4 +71,16 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.App ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: baseline;
+}
+
+.App li {
+  margin: 0 1rem;
 }
