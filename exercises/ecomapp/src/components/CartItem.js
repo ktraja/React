@@ -1,26 +1,69 @@
 import React from "react";
+import classes from "../pages/ShoppingCart.module.css";
+
+import { useSelector, useDispatch } from "react-redux";
+import useHttp from "../api/useHttp";
+import addCart from "../api/addCart";
+import { cart_api } from "../redux/actions";
+import updCart from "../api/updCart";
 
 const CartItem = (props) => {
-  const addItemHandler = () => {};
-  const delItemHandler = () => {};
+  const authReducer = useSelector((state) => state.authReducer);
+  const dispatch = useDispatch();
+  const cartReducer = useSelector((state) => state.cartReducer);
+  const { sendRequest } = useHttp(addCart);
+  const cart = { ...cartReducer };
+  const { user } = authReducer;
+
+  const addItemHandler = () => {
+    sendRequest(updCart(cart, props.item, "ADD"), user);
+
+    dispatch(
+      cart_api({
+        type: "CART",
+        cartItems: cart.cartItems,
+        totQty: cart.totQty,
+        totVal: cart.totVal,
+      })
+    );
+  };
+  const delItemHandler = () => {
+    sendRequest(updCart(cart, props.item, "DEL"), user);
+
+    dispatch(
+      cart_api({
+        type: "CART",
+        cartItems: cart.cartItems,
+        totQty: cart.totQty,
+        totVal: cart.totVal,
+      })
+    );
+  };
 
   return (
-    <div className="prod">
-      <div>{props.prod.prod}</div>
-      <img src={require(`${props.prod.img}`)} alt="prod" className="pic" />
-      <div className="brPr">
-        <span>{props.prod.brand}</span>
-        <span>${props.prod.price}</span>
+    <div>
+      <div className={classes.prod}>
+        <img
+          src={require(`${props.item.img}`)}
+          alt="prod"
+          className={classes.pic}
+        />
+        <div>{props.item.prod}</div>
+
+        <div className={classes.btnBox}>
+          <button className="btn" onClick={delItemHandler}>
+            -
+          </button>
+          {props.item.qty}
+          <button className="btn" onClick={addItemHandler}>
+            +
+          </button>
+        </div>
+        <div className={classes.brPr}>
+          <span>${props.item.price * props.item.qty}</span>
+        </div>
       </div>
-      <div className="btnBox">
-        <button className="btn" onClick={delItemHandler}>
-          -
-        </button>
-        {/* {prodQty} */}
-        <button className="btn" onClick={addItemHandler}>
-          +
-        </button>
-      </div>
+      <hr />
     </div>
   );
 };

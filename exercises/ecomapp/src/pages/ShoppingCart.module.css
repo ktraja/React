@@ -1,0 +1,17 @@
+.prod {
+  width: 700px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+  /* border-style: outset; */
+}
+
+.pic {
+  width: 40px;
+  height: 40px;
+  /* margin-top: 5px;
+  margin-bottom: 5px; */
+}

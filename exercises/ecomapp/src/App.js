@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import { useSelector, useDispatch } from "react-redux";
 import { login_api } from "./redux/actions";
+import ShoppingCart from "./pages/ShoppingCart";
 
 function App() {
   const authReducer = useSelector((state) => state.authReducer);
@@ -50,8 +51,12 @@ function App() {
             )}
           </ul>
         </nav>
-        <span>{authReducer.user}</span>
-        <span type="button" className="fas fa-shopping-cart cart"></span>
+        {authReducer.status === "LOGGEDIN" && (
+          <Link to="/cart">
+            <span>{authReducer.user}</span>
+            <span type="button" className="fas fa-shopping-cart cart"></span>
+          </Link>
+        )}
       </div>
 
       <div className="App-body">
@@ -68,6 +73,11 @@ function App() {
           {authReducer.status === "LOGGEDIN" && (
             <Route path="/shop">
               <Shop />
+            </Route>
+          )}
+          {authReducer.status === "LOGGEDIN" && (
+            <Route path="/cart">
+              <ShoppingCart />
             </Route>
           )}
         </Switch>

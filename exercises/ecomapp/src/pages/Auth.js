@@ -20,8 +20,18 @@ const Auth = () => {
     setToggleSignup((prevState) => !prevState);
   };
 
+  const getUser = () => {
+    if (toggleSignup) {
+      return nameInputRef.current.value;
+    } else {
+    }
+  };
+
   const submitHandler = (event) => {
     event.preventDefault();
+
+    const user = getUser();
+
     if (toggleSignup) {
       loginUrl =
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=";
@@ -33,8 +43,8 @@ const Auth = () => {
     }
 
     sendRequest({
-      loginFlag: true,
-      user: "Raja",
+      loginFlag: !toggleSignup,
+      user: user,
       email: emailInputRef.current.value,
       password: passwordInputRef.current.value,
       loginUrl: loginUrl,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../App.css";
 import { useSelector, useDispatch } from "react-redux";
 import useHttp from "../api/useHttp";
@@ -14,9 +14,20 @@ const ProdList = (props) => {
   const { sendRequest } = useHttp(addCart);
   const cart = { ...cartReducer };
   const { user } = authReducer;
+  const obj = cart.cartItems.find((item) => item.id === props.prod.id);
+  const cartUrl =
+    "https://reactdb-6ad6e-default-rtdb.asia-southeast1.firebasedatabase.app/ecomcart/" +
+    user +
+    ".json";
+
+  useEffect(() => {
+    if (obj) {
+      updProdQty(obj.qty);
+    }
+  }, [obj]);
 
   const addItemHandler = () => {
-    sendRequest(updCart(cart, props.prod, "ADD"), user);
+    sendRequest(updCart(cart, props.prod, "ADD"), cartUrl, "POST", user);
 
     dispatch(
       cart_api({
@@ -27,14 +38,13 @@ const ProdList = (props) => {
       })
     );
 
-    console.log(props.prod.qty);
     updProdQty((prevQty) => {
       return prevQty + 1;
     });
   };
 
   const delItemHandler = () => {
-    sendRequest(updCart(cart, props.prod, "DEL"), user);
+    sendRequest(updCart(cart, props.prod, "DEL"), cartUrl, "POST", user);
 
     dispatch(
       cart_api({
@@ -62,6 +72,7 @@ const ProdList = (props) => {
           -
         </button>
         {prodQty}
+
         <button className="btn" onClick={addItemHandler}>
           +
         </button>
