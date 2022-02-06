@@ -12,7 +12,7 @@ export const login_api = (ipData) => ({
 export const data_api = (ipData) => ({
   type: DATA,
   payload: {
-    user: ipData.user,
+    error: ipData.errorMessage,
     data: ipData.data,
     status: ipData.status,
   },

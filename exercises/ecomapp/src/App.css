@@ -84,3 +84,6 @@
 .App li {
   margin: 0 1rem;
 }
+.App a {
+  color: white;
+}

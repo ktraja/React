@@ -1,6 +1,5 @@
 import React from "react";
 import classes from "../pages/ShoppingCart.module.css";
-
 import { useSelector, useDispatch } from "react-redux";
 import useHttp from "../api/useHttp";
 import addCart from "../api/addCart";
@@ -16,7 +15,12 @@ const CartItem = (props) => {
   const { user } = authReducer;
 
   const addItemHandler = () => {
-    sendRequest(updCart(cart, props.item, "ADD"), user);
+    const cartObj = {
+      item: updCart(cart, props.item, "ADD"),
+      user: user,
+      reqType: "DATA",
+    };
+    sendRequest(cartObj);
 
     dispatch(
       cart_api({
@@ -28,7 +32,12 @@ const CartItem = (props) => {
     );
   };
   const delItemHandler = () => {
-    sendRequest(updCart(cart, props.item, "DEL"), user);
+    const cartObj = {
+      item: updCart(cart, props.item, "DEL"),
+      user: user,
+      reqType: "DATA",
+    };
+    sendRequest(cartObj);
 
     dispatch(
       cart_api({

@@ -1,9 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import classes from "./Auth.module.css";
 import loginFunc from "../api/loginFunc";
 import useHttp from "../api/useHttp";
 import { useHistory } from "react-router";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { cart_api } from "../redux/actions";
+import { CART } from "../redux/actionTypes";
+import getCart from "../api/getCart";
 
 const Auth = () => {
   const [toggleSignup, setToggleSignup] = useState(false);
@@ -13,52 +16,94 @@ const Auth = () => {
   const { sendRequest } = useHttp(loginFunc);
   const history = useHistory();
   const authReducer = useSelector((state) => state.authReducer);
+  const dispatch = useDispatch();
+  let user;
 
-  let loginUrl, apiKey;
+  const getUserCart = useCallback(
+    (user) => {
+      getCart(user).then((value) => {
+        const userCart = value;
+        dispatch(
+          cart_api({
+            type: CART,
+            cartItems: userCart.cartItems,
+            totQty: userCart.totQty,
+            totVal: userCart.totVal,
+          })
+        );
+      });
+    },
+    [dispatch]
+  );
+
+  const getUser = async () => {
+    let userName = "No User Found";
+    const userResp = await fetch(
+      "https://reactdb-6ad6e-default-rtdb.asia-southeast1.firebasedatabase.app/ecomcart/users.json",
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    const userList = await userResp.json();
+    for (const key in userList) {
+      if (userList[key].email === emailInputRef.current.value) {
+        userName = userList[key].user;
+      }
+    }
+    return userName;
+  };
 
   const toggleHandler = () => {
     setToggleSignup((prevState) => !prevState);
   };
 
-  const getUser = () => {
-    if (toggleSignup) {
-      return nameInputRef.current.value;
-    } else {
-    }
-  };
-
   const submitHandler = (event) => {
     event.preventDefault();
 
-    const user = getUser();
-
-    if (toggleSignup) {
-      loginUrl =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=";
-      apiKey = "AIzaSyAyiztGYac7IMAWvQhXrnNorIWTnRiSu_M";
+    if (!toggleSignup) {
+      getUser().then((value) => {
+        user = value;
+        const loginObj = {
+          signupFlag: toggleSignup,
+          email: emailInputRef.current.value,
+          password: passwordInputRef.current.value,
+          user: user ? user : nameInputRef.current.value,
+          reqType: "LOGIN",
+        };
+        sendRequest(loginObj);
+      });
     } else {
-      loginUrl =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=";
-      apiKey = "AIzaSyAyiztGYac7IMAWvQhXrnNorIWTnRiSu_M";
+      const loginObj = {
+        signupFlag: toggleSignup,
+        email: emailInputRef.current.value,
+        password: passwordInputRef.current.value,
+        user: nameInputRef.current.value,
+        reqType: "SIGNUP",
+      };
+      sendRequest(loginObj);
     }
-
-    sendRequest({
-      loginFlag: !toggleSignup,
-      user: user,
-      email: emailInputRef.current.value,
-      password: passwordInputRef.current.value,
-      loginUrl: loginUrl,
-      apiKey: apiKey,
-    });
 
     // const validTill = new Date(new Date().getTime() + data.expiresIn * 1000);
   };
 
   useEffect(() => {
-    if (authReducer.status === "LOGGEDIN") {
-      history.replace("/shop");
+    switch (authReducer.status) {
+      case "LOGGEDIN": {
+        getUserCart(authReducer.user);
+        history.replace("/shop");
+        break;
+      }
+      case "LOGIN_ERROR": {
+        nameInputRef.current.value = "";
+        emailInputRef.current.value = "";
+        passwordInputRef.current.value = "";
+        break;
+      }
+      default:
+        history.replace("/login");
     }
-  }, [history, authReducer.status]);
+  }, [history, authReducer.status, authReducer.user, getUserCart]);
 
   return (
     <section className={classes.authModal} onSubmit={submitHandler}>
@@ -83,6 +128,7 @@ const Auth = () => {
             ref={passwordInputRef}
           ></input>
         </div>
+        <p>{authReducer.status === "LOGIN_ERROR" ? authReducer.data : ""}</p>
         <button className={classes.btn} type="submit">
           {toggleSignup ? "Create Account" : "Login"}
         </button>

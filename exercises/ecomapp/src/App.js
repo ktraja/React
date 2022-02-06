@@ -4,12 +4,35 @@ import { Redirect, Route, Switch, Link } from "react-router-dom";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import { useSelector, useDispatch } from "react-redux";
-import { login_api } from "./redux/actions";
 import ShoppingCart from "./pages/ShoppingCart";
+import { login_api, cart_api } from "./redux/actions";
+import { LOGIN, CART } from "./redux/actionTypes";
+import { useEffect, useCallback } from "react";
+import getCart from "./api/getCart";
+
+let sessionTimer, token, validTill, timeLeft, user;
 
 function App() {
   const authReducer = useSelector((state) => state.authReducer);
   const dispatch = useDispatch();
+  const { status, data } = authReducer;
+
+  const getUserCart = useCallback(
+    (user) => {
+      getCart(user).then((value) => {
+        const userCart = value;
+        dispatch(
+          cart_api({
+            type: CART,
+            cartItems: userCart.cartItems,
+            totQty: userCart.totQty,
+            totVal: userCart.totVal,
+          })
+        );
+      });
+    },
+    [dispatch]
+  );
 
   const logoutHandler = () => {
     localStorage.removeItem("user");
@@ -17,13 +40,42 @@ function App() {
     localStorage.removeItem("validTill");
     dispatch(
       login_api({
-        type: "LOGOUT",
+        type: LOGIN,
         user: null,
         data: null,
         status: "LOGGEDOUT",
       })
     );
+    clearTimeout(sessionTimer);
   };
+
+  token = localStorage.getItem("token");
+  if (token && token.length > 0) {
+    validTill = localStorage.getItem("validTill");
+    timeLeft = new Date(validTill) - new Date();
+    user = localStorage.getItem("user");
+  }
+
+  useEffect(() => {
+    if (status === "LOGGEDIN") {
+      sessionTimer = setTimeout(logoutHandler, timeLeft);
+    } else {
+      if (!data && token && token.length > 0) {
+        if (timeLeft > 3000) {
+          dispatch(
+            login_api({
+              type: LOGIN,
+              user: localStorage.getItem("user"),
+              data: { token: token },
+              status: "LOGGEDIN",
+            })
+          );
+          sessionTimer = setTimeout(logoutHandler, timeLeft);
+        }
+        getUserCart(user);
+      }
+    }
+  });
 
   return (
     <div className="App">

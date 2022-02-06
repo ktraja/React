@@ -15,10 +15,6 @@ const ProdList = (props) => {
   const cart = { ...cartReducer };
   const { user } = authReducer;
   const obj = cart.cartItems.find((item) => item.id === props.prod.id);
-  const cartUrl =
-    "https://reactdb-6ad6e-default-rtdb.asia-southeast1.firebasedatabase.app/ecomcart/" +
-    user +
-    ".json";
 
   useEffect(() => {
     if (obj) {
@@ -27,7 +23,12 @@ const ProdList = (props) => {
   }, [obj]);
 
   const addItemHandler = () => {
-    sendRequest(updCart(cart, props.prod, "ADD"), cartUrl, "POST", user);
+    const cartObj = {
+      item: updCart(cart, props.prod, "ADD"),
+      user: user,
+      reqType: "DATA",
+    };
+    sendRequest(cartObj);
 
     dispatch(
       cart_api({
@@ -44,7 +45,12 @@ const ProdList = (props) => {
   };
 
   const delItemHandler = () => {
-    sendRequest(updCart(cart, props.prod, "DEL"), cartUrl, "POST", user);
+    const cartObj = {
+      item: updCart(cart, props.prod, "DEL"),
+      user: user,
+      reqType: "DATA",
+    };
+    sendRequest(cartObj);
 
     dispatch(
       cart_api({

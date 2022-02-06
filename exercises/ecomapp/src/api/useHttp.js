@@ -7,20 +7,12 @@ const useHttp = (requestFunction) => {
   const dispatch = useDispatch();
 
   const sendRequest = useCallback(
-    async function (requestData, usrUrl) {
-      const reqType = requestData.loginFlag;
+    async function (requestData) {
+      const reqType = requestData.reqType;
       try {
-        const responseData = await requestFunction(requestData, usrUrl);
-        if (reqType) {
-          dispatch(
-            login_api({
-              type: LOGIN,
-              user: requestData.user,
-              data: responseData,
-              status: "LOGGEDIN",
-            })
-          );
-        } else {
+        const responseData = await requestFunction(requestData);
+
+        if (reqType === "DATA") {
           dispatch(
             data_api({
               type: DATA,
@@ -29,9 +21,27 @@ const useHttp = (requestFunction) => {
               status: "COMPLETED",
             })
           );
+        } else {
+          dispatch(
+            login_api({
+              type: LOGIN,
+              user: requestData.user,
+              data: responseData,
+              status: reqType === "LOGIN" ? "LOGGEDIN" : "USERCREATED",
+            })
+          );
         }
       } catch (error) {
-        if (reqType) {
+        if (reqType === "DATA") {
+          dispatch(
+            data_api({
+              type: DATA,
+              error: error.message,
+              data: null,
+              status: "DATA_ERROR",
+            })
+          );
+        } else {
           dispatch(
             login_api({
               type: LOGIN,
@@ -40,16 +50,7 @@ const useHttp = (requestFunction) => {
               status: "LOGIN_ERROR",
             })
           );
-        } else {
         }
-        dispatch(
-          data_api({
-            type: DATA,
-            error: error.message,
-            data: null,
-            status: "DATA_ERROR",
-          })
-        );
       }
     },
     [requestFunction, dispatch]
