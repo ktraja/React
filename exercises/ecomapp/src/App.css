@@ -23,6 +23,7 @@
   background-color: gray;
   height: 85vh;
   color: white;
+  overflow: auto;
 }
 
 .cart {

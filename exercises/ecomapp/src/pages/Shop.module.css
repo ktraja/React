@@ -3,19 +3,20 @@
   flex-direction: row;
   flex-wrap: wrap;
   overflow: auto;
+  max-width: 85%;
 }
 
 .catBox {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 15%;
   background-color: lightgray;
   color: black;
 }
-.App-body {
+/* .App-body {
   display: flex;
   flex-direction: row;
   background-color: gray;
   height: 85vh;
   color: white;
-}
+} */

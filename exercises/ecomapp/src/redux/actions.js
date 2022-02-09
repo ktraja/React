@@ -1,4 +1,4 @@
-import { LOGIN, DATA, CART } from "./actionTypes";
+import { LOGIN, DATA, CART, CATEGORY } from "./actionTypes";
 
 export const login_api = (ipData) => ({
   type: LOGIN,
@@ -24,5 +24,12 @@ export const cart_api = (ipData) => ({
     cartItems: ipData.cartItems,
     totQty: ipData.totQty,
     totVal: ipData.totVal,
+  },
+});
+
+export const category_api = (ipData) => ({
+  type: CATEGORY,
+  payload: {
+    catArray: ipData.catArray,
   },
 });
